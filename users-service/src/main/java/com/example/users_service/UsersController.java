@@ -45,4 +45,18 @@ public class UsersController {
         return users.size();
     }
 
+    @PutMapping("/updateUser")
+    public Users updateUser(@Valid @RequestBody Users user){
+
+        // maybe to update, we take id of user, search list for same id, then update with new values (RequestParams needed?)
+        return null;
+    }
+
+    @DeleteMapping("/deleteUser")
+    public void deleteUser(@Valid @RequestBody Users user){
+
+        // possibly same as idea as update, take in ID and search for same ID, then DELETE that user
+        users.remove(user);
+    }
+
 }
