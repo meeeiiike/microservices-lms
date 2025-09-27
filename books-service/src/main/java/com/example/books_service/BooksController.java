@@ -44,4 +44,19 @@ public class BooksController {
     public int getCount(){
         return books.size();
     }
+
+    @PutMapping("/updateBooks")
+    public Books updateUser(@Valid @RequestBody Books book){
+        //if(users.contains(user.getId())){} something like this??
+        // maybe to update, we take id of book, search list for same id, then update with new values (RequestParams needed?)
+        // if id alreadyExists
+        return null;
+    }
+
+    @DeleteMapping("/deleteBook")
+    public void deleteBook(@Valid @RequestBody Books book){
+
+        // possibly same as idea as update, take in ID and search for same ID, then DELETE that book
+        books.remove(book);
+    }
 }
