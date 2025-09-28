@@ -1,6 +1,7 @@
 package com.example.users_service;
 
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,6 +29,14 @@ public class UsersController {
     // POST Request to add One User
     @PostMapping("/addUser")
     public Users addUser(@Valid @RequestBody Users user){
+        // Nested loop to search through List of Users, and checks if new ID being added already exists
+        // throws a big scary red error but will work for now
+        // Similar logic should hopefully work for other checks like email name etc...
+        for(Users u : users){
+            if(u.getId().equals(user.getId())){
+                throw new RuntimeException("ID Already Exists");
+            }
+        }
         users.add(user);
         return user;
     }
@@ -45,16 +54,15 @@ public class UsersController {
         return users.size();
     }
 
+    // Simple PUT Request to update Users
     @PutMapping("/updateUser")
     public Users updateUser(@Valid @RequestBody Users user){
-
         // maybe to update, we take id of user, search list for same id, then update with new values (RequestParams needed?)
         return null;
     }
 
     @DeleteMapping("/deleteUser")
     public void deleteUser(@Valid @RequestBody Users user){
-
         // possibly same as idea as update, take in ID and search for same ID, then DELETE that user
         users.remove(user);
     }

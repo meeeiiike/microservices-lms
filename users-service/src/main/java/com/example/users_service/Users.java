@@ -2,6 +2,7 @@ package com.example.users_service;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,7 +11,8 @@ import lombok.Data;
 public class Users {
 
     @NotNull
-    private int id;
+    @Positive
+    private Long id;
     @NotBlank
     private String email;
     @NotBlank
