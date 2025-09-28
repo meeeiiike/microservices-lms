@@ -1,7 +1,6 @@
 package com.example.users_service;
 
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,12 +10,15 @@ import java.util.List;
 @RequestMapping("/users")
 public class UsersController {
 
-    /* TODO    
-    - Add all CRUD Features (Update: PUT/POST, Delete: DELETE)
+    /* TODO
+    - Need to edit RequestBody or change to new Annotation to only request email and pwd
     - Add basic Validation for all Features
     - ADD basic tests (Junit/ErrorHandling)
     - Add id, name, email etc... check's
     */
+
+    // Basic Counter used for ID's
+    private Long idCount = 1L;
 
     // Create In-Memory Storage for List of Users
     List<Users> users = new ArrayList<>();
@@ -30,39 +32,24 @@ public class UsersController {
     // POST Request to add One User
     @PostMapping("/addUser")
     public Users addUser(@Valid @RequestBody Users user){
-        // Nested loop to search through List of Users, and checks if new ID being added already exists
-        // throws a big scary red error but will work for now
-        // Similar logic should hopefully work for other checks like email name etc...
-        for(Users u : users){
-            if(u.getId().equals(user.getId())){
-                throw new RuntimeException("ID Already Exists");
-            }
-        }
+        // Screw the nested loops and errors - user cannot enter ID - still prompts for ID, but works!
+        user.setId(idCount++);
         users.add(user);
         return user;
     }
 
     // POST Request to add Multiple Users
-    // TODO: error with this method - not working as it should
     @PostMapping("/addUsers")
-    public List<Users> addUsers(@Valid @RequestBody List<Users> user){
-        for(Users u : user){
-            if(u.getId().equals(user.get(0).getId())){
-                throw new RuntimeException("ID Already Exists, sorry... :(");
-            }
+    public List<Users> addUsers(@Valid @RequestBody List<Users> user) {
+        for (Users u : user) {
+            u.setId(idCount++);
+            users.add(u);
         }
-        users.addAll(user);
-        return users;
+        return user;
     }
 
-    // Simple Get method to return count of Users
-    @GetMapping("/countUsers")
-    public int getCountUsers(){
-        return users.size();
-    }
-
-    // Simple PUT Request to update Users
-    @PutMapping("/updateUser")
+    // Simple PUT Request to update Users by ID
+    @PutMapping("/updateUser/{id}")
     public Users updateUser(@Valid @RequestBody Users user,@RequestParam Long id ){
         for(Users u : users) {
             if (u.getId().equals(id)) {
@@ -74,9 +61,9 @@ public class UsersController {
         return null;
     }
 
+    // Simple DELETE Request to Delete a User by ID
     @DeleteMapping("/deleteUser/{id}")
     public Users deleteUser(@Valid @RequestParam Long id){
-        // possibly same as idea as update, take in ID and search for same ID, then DELETE that user
         users.removeIf(u -> u.getId().equals(id)); // Auto generated in IntelliJ, from nested loop to using 'CollectionIf' + actually works
         return null;
     }
